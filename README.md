@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Installing packages 
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+npm install graphql@^16.10.0 @apollo/server @as-integrations/next graphql-tag
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Using CURL to interact with the GraphQL API 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+curl -X POST http://localhost:3000/api/graphql -H "Content-Type: application/json" -d '{"query" : "{hello}"}'
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+curl -X POST http://localhost:3000/api/graphql -H "Content-Type: application/json" -d '{"query" : "{users { id name} }"}'
+{"data":{"users":[{"id":"1","name":"user 1"},{"id":"2","name":"user 2"}]}}
+```
 
-## Learn More
+```
+curl -X POST http://localhost:3000/api/graphql -H "Content-Type: application/json" -d '{"query": "{ weather(zip: \"96815\") { zip weather tempC tempF } }"}'
+```
 
-To learn more about Next.js, take a look at the following resources:
+```
+curl -X POST http://localhost:3000/api/graphql -H "Content-Type: application/json" -d '{"query": "{ weather(zip: \"96815\") { zip weather tempC tempF friends } }"}'
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Mutation AddWeather 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+curl -X POST http://localhost:3000/api/graphql \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "mutation AddWeather($data: WeatherInput!) { weather(data: $data) { zip weather tempC tempF friends { zip weather } } }",
+    "variables": {
+      "data": {
+        "zip": "96815",
+        "weather": "Sunny",
+        "tempC": "25C",
+        "tempF": "77F"
+      }
+    }
+  }'
+```
 
-## Deploy on Vercel
+### Fetch weather by zip
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+curl -X POST http://localhost:3000/api/graphql \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "query GetWeather($zip: String!) { weather(zip: $zip) { zip weather tempC tempF } }",
+    "variables": {
+      "zip": "96815"
+    }
+  }'        
+```
