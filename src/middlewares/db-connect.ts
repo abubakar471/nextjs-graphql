@@ -2,7 +2,7 @@ import {storeDocument} from "@/mongoose/weather/service";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 
-export async function dbConnect(): Promise<any | string> {
+export const dbConnect = async(): Promise<any | string>  => {
     const mongoServer = await MongoMemoryServer.create();
     const MONGOIO_URI = mongoServer.getUri();
 
@@ -35,4 +35,6 @@ export async function dbConnect(): Promise<any | string> {
         tempF: "60F",
         friends: ["96814", "96815"]
     })
+
+    return mongoServer;
 } 
