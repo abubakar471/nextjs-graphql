@@ -53,3 +53,29 @@ curl -X POST http://localhost:3000/api/graphql \
     }
   }'        
 ```
+
+---
+
+# Setting up testing environment (TDD = Test Driven Development)
+
+```
+npm i -D jest @types/jest ts-jest
+```
+
+Now, create a __test__ folder in your src/ directory. In package.json and a new script called 
+
+```
+{
+    "scripts": {
+        ...
+        "test" : "jest"
+    }
+}
+```
+
+Now, run this command in the root directory:
+
+```
+npx ts-jest config:init
+```
+
